@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ncloudrpg.iml" filepath="$PROJECT_DIR$/.idea/ncloudrpg.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ncloud-cert.iml" filepath="$PROJECT_DIR$/.idea/ncloud-cert.iml" />
     </modules>
   </component>
 </project>

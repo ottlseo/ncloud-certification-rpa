@@ -15,13 +15,17 @@ for col in columns:
         MAX_ROW += 1
 MAX_ROW -= 1  # 총 row 개수는 (MAX_ROW-1) 개
 
+# 참조용 메일 주소 넣기
+originsheet.cell(row=MAX_ROW+2, column=12).value = "dl_edu_cert@navercorp.com"
+originsheet.cell(row=MAX_ROW+3, column=12).value = "dl_certification@navercorp.com"
+
 # 날짜 삽입 (A열-> M열)
 dateValue = (originsheet.cell(row=2, column=1).value) % 10000  ## 1102
 month = (int)(dateValue / 100)
 day = (dateValue % 100)
 dateString = str(month)+"월 "+str(day)+"일"  # 월-일 형태의 스트링으로 변환
 
-for i in range(0,MAX_ROW):
+for i in range(0,MAX_ROW+2):
     originsheet.cell(row=i+2, column=13).value = dateString  # M열에 삽입
 
 # step 3. Selenium으로 브라우저 원격 제어

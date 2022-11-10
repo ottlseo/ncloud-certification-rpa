@@ -12,6 +12,18 @@ originsheet = wb.active
 old_cell = originsheet.cell(1,1)
 new_cell = mailsheet.cell(2,1, value=old_cell.value)
 
+# mailsheet[2:10,1] = originsheet[2:10,3] # 안 됨
+
+""" 
+#이렇게 해야 함
+allList = []
+for row in sheet.iter_rows(min_row=1, max_row=10, min_col=2, max_col=5):
+    a = []
+    for cell in row:
+        a.append(cell.value)
+    allList.append(a)
+"""
+
 # step 2. 엑셀 중복값 표시
 # 나중에
 

@@ -11,7 +11,8 @@ import accountInfo
 wb = openpyxl.load_workbook("./data/자격시험수험자리스트_1102.xlsx")
 originsheet = wb.active
 
-MAX_ROW = -1
+#MAX_ROW = -1
+MAX_ROW = 10
 """
 ###### [STEP 2] 기본 정보 붙여넣기 ######
 # 이메일 셀 범위 복사 붙여넣기 (C열-> L열로 복사)
@@ -34,25 +35,37 @@ for i in range(0,MAX_ROW+2):
     originsheet.cell(row=i+2, column=13).value = dateString  # M열에 삽입
 """
 if __name__=="__main__":
-    def login(driver):
-        ### 초기 1회 ###
-        # '로그인' 클릭: a.glue-header__link
-        # 아이디 입력: input#identifierId
-        # '다음' 클릭: #identifierNext > div > button > span
-        # 비밀번호 입력: #password > div.aCsJod.oJeWuf > div > div.Xb9hP > input
-        # '다음' 클릭: #passwordNext > div > button > span
-
+    def login(driver):  ### 초기 1회 ###
+        # '로그인' 클릭
         driver.find_element(By.CSS_SELECTOR, "a.glue-header__link").click()
         time.sleep(2)
+        # 아이디 입력 & '다음' 클릭
         driver.find_element(By.CSS_SELECTOR, "input#identifierId").send_keys(accountInfo.admin_id)
         time.sleep(2)
         driver.find_element(By.CSS_SELECTOR, "#identifierNext > div > button > span").click()
         time.sleep(2)
+        # 비밀번호 입력 & '다음' 클릭
         driver.find_element(By.CSS_SELECTOR, "#password > div.aCsJod.oJeWuf > div > div.Xb9hP > input").send_keys(accountInfo.admin_pw)
         time.sleep(2)
         driver.find_element(By.CSS_SELECTOR, "#passwordNext > div > button > span").click()
         time.sleep(5)
         print("LOGIN COMPLETED")
+    def generate_link(driver, current_row):
+        driver.find_element(By.CSS_SELECTOR,
+                            "#yDmH0d > c-wiz > div > div.S3RDod > div > div.Qcuypc > div.Ez8Iud > div > div.VfPpkd-xl07Ob-XxIAqe-OWXEXe-oYxtQd > div:nth-child(1) > div > button > span").click()
+        time.sleep(1)
+        driver.find_element(By.CSS_SELECTOR,
+                            "#yDmH0d > c-wiz > div > div.S3RDod > div > div.Qcuypc > div.Ez8Iud > div > div.VfPpkd-xl07Ob-XxIAqe-OWXEXe-oYxtQd > div:nth-child(2) > div > ul > li:nth-child(2) > span.VfPpkd-StrnGf-rymPhb-b9t22c").click()
+        time.sleep(1)
+        # driver.find_element(By.CSS_SELECTOR, "div.VKf0Le.u9lF8e div:nth-child(2) > span > button").click()
+        # time.sleep(1)
+        link = driver.find_element(By.CSS_SELECTOR,
+                                   "#yDmH0d > div.VfPpkd-Sx9Kwc.VfPpkd-Sx9Kwc-OWXEXe-vOE8Lb.cC1eCc.UDxLd.PzCPDd.VKf0Le.u9lF8e.VfPpkd-Sx9Kwc-OWXEXe-FNFY6c > div.VfPpkd-wzTsW > div > div.VfPpkd-cnG4Wd > div > div:nth-child(2) > div > div.NgL38b.CZ8zsc > div.VA2JSc")
+        print(link.text)
+        originsheet.cell(row=current_row, column=14).value = link.text
+        driver.find_element(By.CSS_SELECTOR,
+                            "div.u9lF8e div.VfPpkd-oclYLd > button > span > svg").click()
+        time.sleep(1)
 
     print("START!")
     driver = uc.Chrome()
@@ -60,22 +73,9 @@ if __name__=="__main__":
     driver.maximize_window()
     time.sleep(2)
     login(driver) #로그인
+    for i in range(0, MAX_ROW):
+        generate_link(driver, i+2)
 
-    driver.find_element(By.CSS_SELECTOR,
-                        "#yDmH0d > c-wiz > div > div.S3RDod > div > div.Qcuypc > div.Ez8Iud > div > div.VfPpkd-xl07Ob-XxIAqe-OWXEXe-oYxtQd > div:nth-child(1) > div > button > span").click()
-    time.sleep(1)
-    driver.find_element(By.CSS_SELECTOR,
-                        "#yDmH0d > c-wiz > div > div.S3RDod > div > div.Qcuypc > div.Ez8Iud > div > div.VfPpkd-xl07Ob-XxIAqe-OWXEXe-oYxtQd > div:nth-child(2) > div > ul > li:nth-child(2) > span.VfPpkd-StrnGf-rymPhb-b9t22c").click()
-    time.sleep(1)
-    #driver.find_element(By.CSS_SELECTOR, "div.VKf0Le.u9lF8e div:nth-child(2) > span > button").click()
-    #time.sleep(1)
-    link = driver.find_element(By.CSS_SELECTOR,
-                               "#yDmH0d > div.VfPpkd-Sx9Kwc.VfPpkd-Sx9Kwc-OWXEXe-vOE8Lb.cC1eCc.UDxLd.PzCPDd.VKf0Le.u9lF8e.VfPpkd-Sx9Kwc-OWXEXe-FNFY6c > div.VfPpkd-wzTsW > div > div.VfPpkd-cnG4Wd > div > div:nth-child(2) > div > div.NgL38b.CZ8zsc > div.VA2JSc")
-    print(link.text)
-    originsheet.cell(row=2, column=14).value = link.text
-    driver.find_element(By.CSS_SELECTOR,
-                        "div.u9lF8e div.VfPpkd-oclYLd > button > span > svg").click()
-    time.sleep(1)
     print("END!")
 
 ###### [STEP 3] Selenium으로 브라우저 원격 제어 ######

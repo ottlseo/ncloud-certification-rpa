@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import undetected_chromedriver as uc
+import accountInfo
 """
 ###### [STEP 1] 수험자 리스트 엑셀 열기 ######
 wb = openpyxl.load_workbook("./data/자격시험수험자리스트_1102.xlsx")
@@ -37,12 +38,15 @@ if __name__=="__main__":
         driver.find_element(By.CSS_SELECTOR, "a.glue-header__link").click()
         time.sleep(2)
 
-        driver.find_element(By.CSS_SELECTOR, "input#identifierId").send_keys("dotsi@ewhain.net")
+        driver.find_element(By.CSS_SELECTOR, "input#identifierId").send_keys(accountInfo.admin_id)
         time.sleep(2)
         driver.find_element(By.CSS_SELECTOR, "#identifierNext > div > button > span").click()
+        time.sleep(2)
+        driver.find_element(By.CSS_SELECTOR, "#password > div.aCsJod.oJeWuf > div > div.Xb9hP > input").send_keys(accountInfo.admin_pw)
+        time.sleep(2)
+        driver.find_element(By.CSS_SELECTOR, "#passwordNext > div > button > span").click()
         time.sleep(5)
-
-        print("COMPLETED")
+        print("LOGIN COMPLETED")
 
     print("START!")
     driver = uc.Chrome()
@@ -60,22 +64,12 @@ if __name__=="__main__":
     # 아이디 입력: input#identifierId
     # '다음' 클릭: #identifierNext > div > button > span
     # 비밀번호 입력: #password > div.aCsJod.oJeWuf > div > div.Xb9hP > input
+    # '다음' 클릭: #passwordNext > div > button > span
         ### 반복 ###
     # '새 회의' 버튼: div.VfPpkd-xl07Ob-XxIAqe-OWXEXe-oYxtQd > div:nth-child(1) > div > button > div.VfPpkd-RLmnJb
     # '나중에 진행할 회의 만들기' 버튼: c-wiz li:nth-child(2) > span.VfPpkd-StrnGf-rymPhb-b9t22c
     # copy 아이콘: div.VKf0Le.u9lF8e div:nth-child(2) > span > button
     # X 아이콘: div.u9lF8e div.VfPpkd-oclYLd > button > span > svg
-
-
-
-"""
-txt = driver.find_element_by_css_selector("textarea#txtSource")
-txt.send_keys(content)
-# 버튼: button#btnTranslate
-button = driver.find_element_by_css_selector("button#btnTranslate")
-button.click()
-time.sleep(5) #지연시간 1초
-"""
 
 # step 4. 엑셀에 정보 붙여넣기
 #sheet.append([title, genre, audience])

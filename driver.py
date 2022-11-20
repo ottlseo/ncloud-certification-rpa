@@ -1,6 +1,8 @@
 import openpyxl
 from selenium import webdriver
 import time
+
+#from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -62,10 +64,10 @@ def login(driver):  ### 초기 1회 ###
         time.sleep(2)
         ## '다음' 버튼: #idvanyphoneverifyNext > div > button > div.VfPpkd-RLmnJb
         driver.find_element(By.CSS_SELECTOR, "# idvanyphoneverifyNext > div > button > div.VfPpkd-RLmnJb").click()
-        print("--LOGIN COMPLETED--")
-    except:
-        print("!!! LOGIN ERROR !!!")
-
+        print("--Your Phone Number is validated--")
+    except: #NoSuchElementException
+        print("--Authentification Success--")
+    print("--LOGIN COMPLETED--")
 def generate_link(driver, sheet, current_row):
     # '새 회의' 버튼
     driver.find_element(By.CSS_SELECTOR,
@@ -74,10 +76,14 @@ def generate_link(driver, sheet, current_row):
     # '나중에 진행할 회의 만들기' 버튼
     driver.find_element(By.CSS_SELECTOR,
                         "#yDmH0d > c-wiz > div > div.S3RDod > div > div.Qcuypc > div.Ez8Iud > div > div.VfPpkd-xl07Ob-XxIAqe-OWXEXe-oYxtQd > div:nth-child(2) > div > ul > li:nth-child(2) > span.VfPpkd-StrnGf-rymPhb-b9t22c").click()
-    time.sleep(2)
+    time.sleep(5)
     # 링크 값 가져오기
-    link = driver.find_element(By.CSS_SELECTOR,
-                               "#yDmH0d > div.VfPpkd-Sx9Kwc.VfPpkd-Sx9Kwc-OWXEXe-vOE8Lb.cC1eCc.UDxLd.PzCPDd.VKf0Le.u9lF8e.VfPpkd-Sx9Kwc-OWXEXe-FNFY6c > div.VfPpkd-wzTsW > div > div.VfPpkd-cnG4Wd > div > div:nth-child(2) > div > div.NgL38b.CZ8zsc > div.VA2JSc")
+    try:
+        link = driver.find_element(By.CSS_SELECTOR, "#yDmH0d > div.VfPpkd-Sx9Kwc.VfPpkd-Sx9Kwc-OWXEXe-vOE8Lb.cC1eCc.UDxLd.PzCPDd.VKf0Le.u9lF8e.VfPpkd-Sx9Kwc-OWXEXe-FNFY6c > div.VfPpkd-wzTsW > div > div.VfPpkd-cnG4Wd > div > div:nth-child(2) > div > div.NgL38b.CZ8zsc > div.VA2JSc")
+        #print("USING OLD CHROME VERSION..")
+    except:
+        link = driver.find_element(By.CSS_SELECTOR, "#yDmH0d > div.VfPpkd-Sx9Kwc.VfPpkd-Sx9Kwc-OWXEXe-vOE8Lb.cC1eCc.UDxLd.PzCPDd.VKf0Le.u9lF8e.VfPpkd-Sx9Kwc-OWXEXe-FNFY6c > div.VfPpkd-wzTsW > div > div.VfPpkd-cnG4Wd > div > div:nth-child(2) > div > div.Hayy8b")
+        #print("USING LATEST CHROME VERSION..")
     print(link.text)
     # 셀에 삽입
     sheet.cell(row=current_row, column=14).value = link.text

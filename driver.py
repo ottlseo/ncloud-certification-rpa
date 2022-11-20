@@ -46,7 +46,25 @@ def login(driver):  ### 초기 1회 ###
     time.sleep(2)
     driver.find_element(By.CSS_SELECTOR, "#passwordNext > div > button > span").click()
     time.sleep(5)
-    print("--LOGIN COMPLETED--")
+
+    ### 전화번호 인증창이 나타날 경우
+    try:
+        phoneNumInput = driver.find_element(By.CSS_SELECTOR, "#phoneNumberId")
+        myPhoneNum = input("인증번호를 받을 전화번호를 입력하세요: ")
+        phoneNumInput.send_keys(myPhoneNum)
+        time.sleep(2)
+        ## '다음' 버튼: #idvanyphonecollectNext > div > button > span
+        driver.find_element(By.CSS_SELECTOR, "#idvanyphonecollectNext > div > button > span").click()
+        time.sleep(1)
+        authNumInput = driver.find_element(By.CSS_SELECTOR, "#idvAnyPhonePin")
+        myAuthNum = input("문자메시지로 받은 인증번호 6자리를 입력하세요: ")
+        authNumInput.send_keys(myAuthNum)
+        time.sleep(2)
+        ## '다음' 버튼: #idvanyphoneverifyNext > div > button > div.VfPpkd-RLmnJb
+        driver.find_element(By.CSS_SELECTOR, "# idvanyphoneverifyNext > div > button > div.VfPpkd-RLmnJb").click()
+        print("--LOGIN COMPLETED--")
+    except:
+        print("!!! LOGIN ERROR !!!")
 
 def generate_link(driver, sheet, current_row):
     # '새 회의' 버튼
@@ -56,7 +74,7 @@ def generate_link(driver, sheet, current_row):
     # '나중에 진행할 회의 만들기' 버튼
     driver.find_element(By.CSS_SELECTOR,
                         "#yDmH0d > c-wiz > div > div.S3RDod > div > div.Qcuypc > div.Ez8Iud > div > div.VfPpkd-xl07Ob-XxIAqe-OWXEXe-oYxtQd > div:nth-child(2) > div > ul > li:nth-child(2) > span.VfPpkd-StrnGf-rymPhb-b9t22c").click()
-    time.sleep(1)
+    time.sleep(2)
     # 링크 값 가져오기
     link = driver.find_element(By.CSS_SELECTOR,
                                "#yDmH0d > div.VfPpkd-Sx9Kwc.VfPpkd-Sx9Kwc-OWXEXe-vOE8Lb.cC1eCc.UDxLd.PzCPDd.VKf0Le.u9lF8e.VfPpkd-Sx9Kwc-OWXEXe-FNFY6c > div.VfPpkd-wzTsW > div > div.VfPpkd-cnG4Wd > div > div:nth-child(2) > div > div.NgL38b.CZ8zsc > div.VA2JSc")
@@ -71,7 +89,7 @@ def generate_link(driver, sheet, current_row):
 
 if __name__=="__main__":
 
-    wb = openpyxl.load_workbook("./data/자격시험수험자리스트_1102.xlsx")
+    wb = openpyxl.load_workbook("./data/23일.xlsx")
     originsheet = wb.active
 
     print("START!")
@@ -86,7 +104,7 @@ if __name__=="__main__":
         generate_link(driver, originsheet, i+2)
 
     print("END!")
-    wb.save("./result/temp_1102.xlsx")
+    wb.save("./result/temp_1123.xlsx")
 
 """
 # 나중에) 메일 전송용 엑셀 만들기

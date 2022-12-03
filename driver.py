@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import undetected_chromedriver as uc
 import accountInfo
 
-def prepare_form(sheet):
+def prepare_form(originsheet, tempsheet):
     global NUM_OF_ROWS
     NUM_OF_ROWS = -1
 
@@ -33,9 +33,11 @@ def prepare_form(sheet):
         originsheet.cell(row=i, column=13).value = dateString  # M열에 삽입
     print("--FORM GENERATED--")
 
-def set_mailer_form(sheet, mailsheet):
-    # 1) L,M,N열을 (2, MAX_ROW + 4) 만큼 복사 -> mailsheet의 A,B,C열 (2, MAX_ROW + 4)
-    # 2) drop_duplicate
+    # tempsheet의 (2,1) ~ (NUM_OF_ROWS+3, 2) 범위에 originsheet의 (2, 12) ~ (NUM_OF_ROWS+3, 13) 범위의 값을 copy&paste
+    # tempsheet를 data에 저장--> wb.save("temp_today.xlsx")
+    print("--FORM PREPARED--")
+def set_mailer_form(mailsheet):
+    # drop_duplicate
     global NUM_OF_PEOPLE
     # NUM_OF_PEOPLE =
 
@@ -101,7 +103,7 @@ def generate_link(driver, mailsheet, current_row):
     time.sleep(1)
 
 def set_result_form(mailsheet, tempsheet):
-    # 1)
+    # 1) mailsheet의 (1,1) ~ (NUM_OF_PEOPLE,3)
     # mailsheet에서 (i,1)값을 가져와 resultsheet에서 찾는다
     # resultsheet에 있는 값만큼
     # NUM_OF_PEOPLE 만큼 반복
@@ -109,18 +111,19 @@ def set_result_form(mailsheet, tempsheet):
 
 if __name__=="__main__":
     # 초기 시트
-    wb = openpyxl.load_workbook("./data/23일.xlsx")
+    wb = openpyxl.load_workbook("./data/자격시험수험자리스트_1101.xlsx")
     originsheet = wb.active
-    # 메일 전송용 시트
-    wb_mail = openpyxl.load_workbook("./mailer/MASS_INPUT_FORM.xlsx")
-    mailsheet = wb_mail.active
     # 중복 체크용 임시 시트
     wb_temp = openpyxl.load_workbook("./mailer/MASS_INPUT_FORM.xlsx")
-    tempsheet = wb_mail.active
+    tempsheet = wb_temp.active
 
     print("START!")
     prepare_form(originsheet)
-    set_mailer_form(originsheet, mailsheet)
+
+    # 메일 전송용 시트
+    wb_mail = openpyxl.load_workbook("./data/temp_1101.xlsx")
+    mailsheet = wb_mail.active
+    set_mailer_form(mailsheet)
 
     driver = uc.Chrome()
     driver.get('https://meet.google.com/')
@@ -132,9 +135,10 @@ if __name__=="__main__":
 
     # mailersheet 생성이 완료되었다면 중복응시자를 같은값으로 체크하여 tempsheet에 링크를 넣는다
     set_result_form(mailsheet, tempsheet)
+    wb_mail.save("./mailer/MASS_INPUT_FORM_1101.xlsx")
 
     print("END!")
-    wb.save("./result/temp_1123.xlsx")
+    wb.save("./result/자격시험수험자리스트_1101_최종.xlsx")
 
 """
 # 나중에) 메일 전송용 엑셀 만들기

@@ -46,23 +46,23 @@ def set_result_form(mailsheet, tempsheet):
 if __name__=="__main__":
 
     # 초기 시트
-    wb = openpyxl.load_workbook("./data/자격시험수험자리스트_1101.xlsx")
+    wb = openpyxl.load_workbook("../data/자격시험수험자리스트_1101.xlsx")
     originsheet = wb.active
     # 중복 체크용 임시 시트
-    wb_temp = openpyxl.load_workbook("./mailer/MASS_INPUT_FORM.xlsx")
+    wb_temp = openpyxl.load_workbook("../mailer/MASS_INPUT_FORM.xlsx")
     tempsheet = wb_temp.active
 
     print("START!")
     prepare_form(originsheet)
 
     # 메일 전송용 시트
-    wb_mail = openpyxl.load_workbook("./data/temp_1101.xlsx")
+    wb_mail = openpyxl.load_workbook("../data/temp_1101.xlsx")
     mailsheet = wb_mail.active
     set_mailer_form(mailsheet)
 
     # mailersheet 생성이 완료되었다면 중복응시자를 같은값으로 체크하여 tempsheet에 링크를 넣는다
     set_result_form(mailsheet, tempsheet)
-    wb_mail.save("./mailer/MASS_INPUT_FORM_1101.xlsx")
+    wb_mail.save("../mailer/MASS_INPUT_FORM_1101.xlsx")
 
     print("END!")
-    wb.save("./result/자격시험수험자리스트_1101_최종.xlsx")
+    wb.save("../result/자격시험수험자리스트_1101_최종.xlsx")

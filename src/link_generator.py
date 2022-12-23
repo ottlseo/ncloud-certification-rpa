@@ -81,17 +81,16 @@ def set_result_form(mailsheet, tempsheet):
     return tempsheet
 
 if __name__=="__main__":
-    wb = openpyxl.load_workbook("../data/List.xlsx")
+    wb = openpyxl.load_workbook("../data/List.xlsx") #나중에 여기를 S3 getObject로 변경
     linksheet = wb.active
 
     # linksheet의 맨 첫 줄에 있는 숫자 n(링크 개수)을 읽어서, n+2 행부터 쌓는다.
-    # n 읽어오기 -> xlsx
     driver = uc.Chrome()
     driver.get('https://meet.google.com/')
     driver.maximize_window()
     time.sleep(2)
     login(driver) #로그인
-    for i in range(2, NUM_OF_PEOPLE+2):
+    for i in range(2, 102): #링크 100개 생성
         generate_link(driver, mailsheet, i)
     print("END!")
     wb.save("../data/List.xlsx")

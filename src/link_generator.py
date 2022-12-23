@@ -1,8 +1,7 @@
 import openpyxl
 from selenium import webdriver
 import time
-
-#from selenium.common import NoSuchElementException
+import openpyxl
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -25,7 +24,7 @@ def login(driver):  ### 초기 1회 ###
     driver.find_element(By.CSS_SELECTOR, "#passwordNext > div > button > span").click()
     time.sleep(5)
 
-    ### 전화번호 인증창이 나타날 경우
+    """### 전화번호 인증창이 나타날 경우
     try:
         phoneNumInput = driver.find_element(By.CSS_SELECTOR, "#phoneNumberId")
         myPhoneNum = input("인증번호를 받을 전화번호를 입력하세요: ")
@@ -43,8 +42,10 @@ def login(driver):  ### 초기 1회 ###
         print("--Your Phone Number is validated--")
     except: #NoSuchElementException
         print("--Authentification Success--")
+    """
     print("--LOGIN COMPLETED--")
-def generate_link(driver, mailsheet, current_row):
+
+def generate_link(driver, linksheet, current_row):
     # '새 회의' 버튼
     driver.find_element(By.CSS_SELECTOR,
                         "#yDmH0d > c-wiz > div > div.S3RDod > div > div.Qcuypc > div.Ez8Iud > div > div.VfPpkd-xl07Ob-XxIAqe-OWXEXe-oYxtQd > div:nth-child(1) > div > button > span").click()
@@ -62,6 +63,8 @@ def generate_link(driver, mailsheet, current_row):
         #print("USING LATEST CHROME VERSION..")
     print(link.text)
 
+    # 새로운 엑셀 파일 만들기
+    link.text
     # 셀에 삽입
     #sheet.cell(row=current_row, column=14).value = link.text
     #mailsheet.cell(row=current_row, column=3).value = link.text
@@ -78,7 +81,11 @@ def set_result_form(mailsheet, tempsheet):
     return tempsheet
 
 if __name__=="__main__":
+    wb = openpyxl.load_workbook("../data/List.xlsx")
+    linksheet = wb.active
 
+    # linksheet의 맨 첫 줄에 있는 숫자 n(링크 개수)을 읽어서, n+2 행부터 쌓는다.
+    # n 읽어오기 -> xlsx
     driver = uc.Chrome()
     driver.get('https://meet.google.com/')
     driver.maximize_window()
@@ -86,4 +93,5 @@ if __name__=="__main__":
     login(driver) #로그인
     for i in range(2, NUM_OF_PEOPLE+2):
         generate_link(driver, mailsheet, i)
-
+    print("END!")
+    wb.save("../data/List.xlsx")

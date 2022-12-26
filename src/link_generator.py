@@ -25,7 +25,7 @@ def login(driver):  ### 초기 1회 ###
     time.sleep(5)
     print("--LOGIN COMPLETED--")
 
-def generate_link(driver, linksheet, current_row):
+def generate_link(driver, sheet, current_row):
     # '새 회의' 버튼
     driver.find_element(By.CSS_SELECTOR,
                         "#yDmH0d > c-wiz > div > div.S3RDod > div > div.Qcuypc > div.Ez8Iud > div > div.VfPpkd-xl07Ob-XxIAqe-OWXEXe-oYxtQd > div:nth-child(1) > div > button > span").click()
@@ -51,31 +51,28 @@ def generate_link(driver, linksheet, current_row):
                         "div.u9lF8e div.VfPpkd-oclYLd > button > span > svg").click()
     time.sleep(1)
 
-def set_result_form(mailsheet, tempsheet):
-    # 1) mailsheet의 (1,1) ~ (NUM_OF_PEOPLE,3)
-    # mailsheet에서 (i,1)값을 가져와 resultsheet에서 찾는다
-    # resultsheet에 있는 값만큼
-    # NUM_OF_PEOPLE 만큼 반복
-    return tempsheet
-
 if __name__=="__main__":
     wb = openpyxl.load_workbook("../data/List.xlsx") #나중에 여기를 S3 getObject로 변경
     linksheet = wb.active
 
     # linksheet의 맨 첫 줄에 있는 숫자 n(링크 개수)을 읽어서, n+2 행부터 쌓는다.
-    startRow = linksheet['A1'].value
+    startRow = (int)(linksheet.cell(row=1, column=1).value)
+    print(startRow)
 
     # 크롤링
     chrome_options = uc.ChromeOptions()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
-
     driver = uc.Chrome()
     driver.get('https://meet.google.com/')
+
     driver.maximize_window()
-    time.sleep(2)
+    time.sleep(1)
     login(driver) #로그인
+
     for i in range(2, 102): #링크 100개 생성
-        generate_link(driver, mailsheet, startRow+i)
+        generate_link(driver, linksheet, startRow+i)
+
+    linksheet.cell(row=1, column=1).value = startRow+100
     print("END!")
     wb.save("../data/List.xlsx")

@@ -33,7 +33,7 @@ def generate_link(driver, linksheet, current_row):
     # '나중에 진행할 회의 만들기' 버튼
     driver.find_element(By.CSS_SELECTOR,
                         "#yDmH0d > c-wiz > div > div.S3RDod > div > div.Qcuypc > div.Ez8Iud > div > div.VfPpkd-xl07Ob-XxIAqe-OWXEXe-oYxtQd > div:nth-child(2) > div > ul > li:nth-child(2) > span.VfPpkd-StrnGf-rymPhb-b9t22c").click()
-    time.sleep(5)
+    time.sleep(3)
     # 링크 값 가져오기
     try:
         link = driver.find_element(By.CSS_SELECTOR, "#yDmH0d > div.VfPpkd-Sx9Kwc.VfPpkd-Sx9Kwc-OWXEXe-vOE8Lb.cC1eCc.UDxLd.PzCPDd.VKf0Le.u9lF8e.VfPpkd-Sx9Kwc-OWXEXe-FNFY6c > div.VfPpkd-wzTsW > div > div.VfPpkd-cnG4Wd > div > div:nth-child(2) > div > div.NgL38b.CZ8zsc > div.VA2JSc")
@@ -66,6 +66,10 @@ if __name__=="__main__":
     startRow = linksheet['A1'].value
 
     # 크롤링
+    chrome_options = uc.ChromeOptions()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+
     driver = uc.Chrome()
     driver.get('https://meet.google.com/')
     driver.maximize_window()

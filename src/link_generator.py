@@ -23,26 +23,6 @@ def login(driver):  ### 초기 1회 ###
     time.sleep(2)
     driver.find_element(By.CSS_SELECTOR, "#passwordNext > div > button > span").click()
     time.sleep(5)
-
-    """### 전화번호 인증창이 나타날 경우
-    try:
-        phoneNumInput = driver.find_element(By.CSS_SELECTOR, "#phoneNumberId")
-        myPhoneNum = input("인증번호를 받을 전화번호를 입력하세요: ")
-        phoneNumInput.send_keys(myPhoneNum)
-        time.sleep(2)
-        ## '다음' 버튼: #idvanyphonecollectNext > div > button > span
-        driver.find_element(By.CSS_SELECTOR, "#idvanyphonecollectNext > div > button > span").click()
-        time.sleep(1)
-        authNumInput = driver.find_element(By.CSS_SELECTOR, "#idvAnyPhonePin")
-        myAuthNum = input("문자메시지로 받은 인증번호 6자리를 입력하세요: ")
-        authNumInput.send_keys(myAuthNum)
-        time.sleep(2)
-        ## '다음' 버튼: #idvanyphoneverifyNext > div > button > div.VfPpkd-RLmnJb
-        driver.find_element(By.CSS_SELECTOR, "# idvanyphoneverifyNext > div > button > div.VfPpkd-RLmnJb").click()
-        print("--Your Phone Number is validated--")
-    except: #NoSuchElementException
-        print("--Authentification Success--")
-    """
     print("--LOGIN COMPLETED--")
 
 def generate_link(driver, linksheet, current_row):
@@ -83,7 +63,6 @@ if __name__=="__main__":
     linksheet = wb.active
 
     # linksheet의 맨 첫 줄에 있는 숫자 n(링크 개수)을 읽어서, n+2 행부터 쌓는다.
-    #print(linksheet['A1'].value)
     startRow = linksheet['A1'].value
 
     # 크롤링

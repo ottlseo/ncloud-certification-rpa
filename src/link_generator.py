@@ -63,10 +63,8 @@ def generate_link(driver, linksheet, current_row):
         #print("USING LATEST CHROME VERSION..")
     print(link.text)
 
-    # 새로운 엑셀 파일 만들기
-    link.text
     # 셀에 삽입
-    #sheet.cell(row=current_row, column=14).value = link.text
+    sheet.cell(row=current_row, column=1).value = link.text
     #mailsheet.cell(row=current_row, column=3).value = link.text
     # 'X' 버튼
     driver.find_element(By.CSS_SELECTOR,
@@ -85,12 +83,16 @@ if __name__=="__main__":
     linksheet = wb.active
 
     # linksheet의 맨 첫 줄에 있는 숫자 n(링크 개수)을 읽어서, n+2 행부터 쌓는다.
+    #print(linksheet['A1'].value)
+    startRow = linksheet['A1'].value
+
+    # 크롤링
     driver = uc.Chrome()
     driver.get('https://meet.google.com/')
     driver.maximize_window()
     time.sleep(2)
     login(driver) #로그인
     for i in range(2, 102): #링크 100개 생성
-        generate_link(driver, mailsheet, i)
+        generate_link(driver, mailsheet, startRow+i)
     print("END!")
     wb.save("../data/List.xlsx")

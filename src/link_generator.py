@@ -2,6 +2,7 @@ import openpyxl
 from selenium import webdriver
 import time
 import openpyxl
+from selenium.common import NoSuchElementException, NoSuchWindowException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -52,6 +53,7 @@ def generate_link(driver, sheet, current_row):
     time.sleep(1)
 
 if __name__=="__main__":
+
     wb = openpyxl.load_workbook("../data/List.xlsx") #나중에 여기를 S3 getObject로 변경
     linksheet = wb.active
 
@@ -70,9 +72,16 @@ if __name__=="__main__":
     time.sleep(1)
     login(driver) #로그인
 
-    for i in range(2, 102): #링크 100개 생성
-        generate_link(driver, linksheet, startRow+i)
+    try:
+        for i in range(2, 52): #링크 100개 생성
+            generate_link(driver, linksheet, startRow+i)
 
-    linksheet.cell(row=1, column=1).value = startRow+100
+
+    except NoSuchElementException:
+        wb.save("../data/List.xlsx")
+    except NoSuchWindowException:
+        print("window closed")
+
+    linksheet.cell(row=1, column=1).value = startRow + i-2
     print("END!")
     wb.save("../data/List.xlsx")
